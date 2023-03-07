@@ -1,11 +1,20 @@
 name: Pruebas unitarias
 on:
-  push:
-    branches: [ develop ]
   pull_request:
-    branches: [ main ]
+    types:
+      - labeled
+      - unlabeled
+      - synchronize
+      - opened
+      - edited
+      - ready_for_review
+      - reopened
+      - unlocked
+  push:
+    branches:
+      - develop
 jobs:
-  job1:
+  job-Unittest:
     name: Pruebas
     runs-on: ubuntu-latest
     steps:
@@ -38,13 +47,20 @@ jobs:
           coverage run -m unittest test/test_persona.py
           coverage report -m
 
-  automerge:
+  job-automerge:
     name: Automerge
-    needs: job1
+    needs: job-Unittest
     runs-on: ubuntu-latest
     steps:
-      - name: automerge
-        uses: "pascalgn/automerge-action@4536e8847eb62fe2f0ee52c8fa92d17aa97f932f"
-        env:
-          GITHUB_TOKEN: "${{ secrets.TOKEN }}"
-          MERGE_LABELS: ""
+      #- name: automerge
+      #  uses: "pascalgn/automerge-action@4536e8847eb62fe2f0ee52c8fa92d17aa97f932f"
+      #  env:
+      #    GITHUB_TOKEN: "${{ secrets.TOKEN }}"
+      #    MERGE_LABELS: "Merge from develop to main"
+      #    MERGE_METHOD: "merge"
+      - name: Merge develop into main
+        uses: tukasz/direct-merge-action@main
+        with:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          source-branch: develop
+          target-branch: main
