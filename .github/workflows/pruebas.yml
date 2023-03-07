@@ -61,6 +61,6 @@ jobs:
       - name: Merge develop into main
         uses: "pascalgn/automerge-action@4536e8847eb62fe2f0ee52c8fa92d17aa97f932f"
         with:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: "${{ secrets.TOKEN }}"
           source-branch: develop
           target-branch: main
