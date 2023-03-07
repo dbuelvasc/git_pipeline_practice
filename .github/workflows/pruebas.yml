@@ -56,7 +56,7 @@ jobs:
   job-automerge:
     name: Automerge
     needs: job-Unittest
-    if: ${{ github.ref == 'develop/' }}
+    if: ${{ github.ref }} == 'develop'
     runs-on: ubuntu-latest
     steps:
       - name: Merge develop into main
