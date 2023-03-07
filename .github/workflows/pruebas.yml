@@ -54,9 +54,9 @@ jobs:
           coverage report -m
 
   job-automerge:
+    if: ${{ github.ref == 'develop' }}
     name: Automerge
     needs: job-Unittest
-    if: ${{ github.ref == 'develop' && contains(github.event.head_commit.message, 'Verde') }}
     runs-on: ubuntu-latest
     steps:
       - name: Merge develop into main
