@@ -13,7 +13,10 @@ on:
   push:
     branches:
       - develop
+      - 'feature/**'
+      - 'release/**'
 jobs:
+
   job-Unittest:
     name: Pruebas
     runs-on: ubuntu-latest
