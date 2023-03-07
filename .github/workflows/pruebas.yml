@@ -54,7 +54,6 @@ jobs:
           coverage report -m
 
   job-automerge:
-    if: ${{ github.ref == 'develop' }}
     name: Automerge
     needs: job-Unittest
     runs-on: ubuntu-latest
