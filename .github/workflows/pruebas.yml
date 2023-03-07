@@ -16,7 +16,8 @@ on:
       - 'feature/**'
       - 'release/**'
 env:
-  PYTHON_VERSION: '3.9'
+  PYTHON_VERSION: '3.7'
+
 jobs:
 
   job-Unittest:
@@ -28,7 +29,7 @@ jobs:
     - name: Configuración de entorno de python
       uses: actions/setup-python@v2
       with:
-          python-version: "$PYTHON_VERSION"
+          python-version: "${{ PYTHON_VERSION }}"
     - name: Instalación de librerias y dependencias
       run: |
         python -m pip install --upgrade pip
