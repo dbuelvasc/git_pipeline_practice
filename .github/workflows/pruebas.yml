@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Merge feature -> develop
-        if: ${{ github.ref == 'refs/heads/feature' && contains(github.event.head_commit.message, 'Azul') }}
+        if: ${{ github.ref == 'refs/heads/feature/**' && contains(github.event.head_commit.message, 'Azul') }}
         uses: "tukasz/direct-merge-action@master"
         with:
           GITHUB_TOKEN: "${{ secrets.TOKEN }}"
