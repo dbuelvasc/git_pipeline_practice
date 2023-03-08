@@ -15,10 +15,9 @@ jobs:
       - name: Checkout de repositorio
         uses: actions/checkout@v2
       - name: Crear rama release
-        with:
-          GITHUB_TOKEN: "${{ secrets.TOKEN }}"
         run: |
           git checkout -b release/v${{ env.VERSION_RELEASE }}
+          git remote set-url origin https://${{ secrets.TOKEN }}@github.com/dbuelvasc/git_pipeline_practice.git
           git push -f -u origin release/v${{ env.VERSION_RELEASE }}
 
   job-merge-main-release:
