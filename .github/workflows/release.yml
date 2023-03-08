@@ -17,7 +17,7 @@ jobs:
       - name: Crear rama release
         uses: peterjgrainger/action-create-branch@v2.2.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           branch: "refs/heads/release/v${{ env.VERSION_RELEASE }}"
           sha: "${{ github.event.pull_request.head.sha }}"
@@ -30,7 +30,7 @@ jobs:
       - name: Merge main -> release
         uses: "tukasz/direct-merge-action@master"
         with:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: "${{ secrets.TOKEN }}"
           source-branch: main
           target-branch: ${{ github.ref }}
 
