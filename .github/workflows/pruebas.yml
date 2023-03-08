@@ -8,8 +8,21 @@ env:
 
 jobs:
 
+  job-merge-develop-feature:
+    name: Actualización de feature con develop
+    if: ${{ contains(github.event.head_commit.message, 'Azul') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge develop -> feature
+        uses: "tukasz/direct-merge-action@master"
+        with:
+          GITHUB_TOKEN: "${{ secrets.TOKEN }}"
+          source-branch: develop
+          target-branch: ${{ github.ref }}
+
   job-Unittest:
     name: Pruebas
+    needs: job-merge-develop-feature
     runs-on: ubuntu-latest
     steps:
     - name: Checkout de repositorio
@@ -41,10 +54,9 @@ jobs:
           coverage run -m unittest discover -s tests -v
           coverage report -m
 
-  job-automerge:
-    name: Automerge
+  job-merge-feature-develop:
+    name: Actualización de develop con feature
     needs: job-Unittest
-    if: ${{ contains(github.event.head_commit.message, 'Azul') }}
     runs-on: ubuntu-latest
     steps:
       - name: Merge feature -> develop
