@@ -9,7 +9,7 @@ env:
 
 jobs:
   job-creacion-release:
-    name: creacion rama release
+    name: Creacion rama release
     runs-on: ubuntu-latest
     steps:
       - name: Crear rama release
@@ -19,6 +19,7 @@ jobs:
 
   job-merge-main-release:
     name: Actualización de release con main
+    needs: job-creacion-release
     runs-on: ubuntu-latest
     steps:
       - name: Merge main -> release
