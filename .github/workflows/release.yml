@@ -9,9 +9,11 @@ env:
 
 jobs:
   job-creacion-release:
-    name: creacion rama release
+    name: Creacion rama release
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout de repositorio
+        uses: actions/checkout@v2
       - name: Crear rama release
         uses: peterjgrainger/action-create-branch@v2.2.0
         env:
@@ -22,6 +24,7 @@ jobs:
 
   job-merge-main-release:
     name: Actualización de release con main
+    needs: job-creacion-release
     runs-on: ubuntu-latest
     steps:
       - name: Merge main -> release
