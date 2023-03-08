@@ -1,0 +1,75 @@
+name: Pruebas AutoMerge Release
+on:
+  push:
+    branches:
+      - develop
+env:
+  PYTHON_VERSION: '3.8'
+  VERSION_RELEASE: '3.0'
+
+jobs:
+  job-creacion-release:
+    name: creacion rama release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Crear rama release
+        run: |
+          git checkout -b release/v${{ env.VERSION_RELEASE }}
+          git push -f -u origin release/v${{ env.VERSION_RELEASE }}
+
+  job-merge-main-release:
+    name: Actualización de release con main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge main -> release
+        uses: "tukasz/direct-merge-action@master"
+        with:
+          GITHUB_TOKEN: "${{ secrets.TOKEN }}"
+          source-branch: main
+          target-branch: ${{ github.ref }}
+
+  job-Unittest:
+    name: Pruebas
+    needs: job-merge-main-release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout de repositorio
+      uses: actions/checkout@v2
+    - name: Configuración de entorno de python
+      uses: actions/setup-python@v2
+      with:
+          python-version: ${{ env.PYTHON_VERSION }}
+    - name: Instalación de librerias y dependencias
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Correr pruebas
+      id: correr-pruebas
+      run: python -m unittest discover -s tests -v
+    - name: Validar resultado con errores
+      if: ${{ failure() }}
+      env:
+        MENSAJE_ERROR: Una o varias pruebas fallaron
+      run: echo "::set-output name=respuesta::${MENSAJE_ERROR}"
+    - name: Validar resultado sin errores
+      if: ${{ success() }}
+      env:
+        MENSAJE_EXITO: Todas las pruebas fueron exitosas
+      run: echo "::set-output name=respuesta::${MENSAJE_EXITO}"
+    - name: Calculo de cubrimiento
+      id: cubrimiento
+      run: |
+          coverage run -m unittest discover -s tests -v
+          coverage report -m
+
+  job-merge-release-main:
+    name: Actualización de main con release
+    needs: job-Unittest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge release -> main
+        uses: "tukasz/direct-merge-action@master"
+        with:
+          GITHUB_TOKEN: "${{ secrets.TOKEN }}"
+          source-branch: ${{ github.ref }}
+          target-branch: main
