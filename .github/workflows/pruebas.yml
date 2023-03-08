@@ -52,5 +52,5 @@ jobs:
         uses: "tukasz/direct-merge-action@master"
         with:
           GITHUB_TOKEN: "${{ secrets.TOKEN }}"
-          source-branch: "feature/**"
+          source-branch: feature/**
           target-branch: develop
