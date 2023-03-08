@@ -1,17 +1,28 @@
-name: Continuous Integration
+name: Pruebas AutoMerge Feature
 on:
   push:
     branches:
-      - develop
       - 'feature/**'
-      - 'release/**'
 env:
   PYTHON_VERSION: '3.8'
 
 jobs:
 
+  job-merge-develop-feature:
+    name: Actualización de feature con develop
+    if: ${{ contains(github.event.head_commit.message, 'Azul') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge develop -> feature
+        uses: "tukasz/direct-merge-action@master"
+        with:
+          GITHUB_TOKEN: "${{ secrets.TOKEN }}"
+          source-branch: develop
+          target-branch: ${{ github.ref }}
+
   job-Unittest:
     name: Pruebas
+    needs: job-merge-develop-feature
     runs-on: ubuntu-latest
     steps:
     - name: Checkout de repositorio
@@ -26,7 +37,7 @@ jobs:
         pip install -r requirements.txt
     - name: Correr pruebas
       id: correr-pruebas
-      run: python -m unittest discover -s test -v
+      run: python -m unittest discover -s tests -v
     - name: Validar resultado con errores
       if: ${{ failure() }}
       env:
@@ -40,18 +51,17 @@ jobs:
     - name: Calculo de cubrimiento
       id: cubrimiento
       run: |
-          coverage run -m unittest discover -s test -v
+          coverage run -m unittest discover -s tests -v
           coverage report -m
 
-  job-automerge:
-    name: Automerge
+  job-merge-feature-develop:
+    name: Actualización de develop con feature
     needs: job-Unittest
     runs-on: ubuntu-latest
     steps:
-      - name: Merge develop into main
-        if: ${{ github.ref == 'refs/heads/develop' && contains(github.event.head_commit.message, 'Azul') }}
+      - name: Merge feature -> develop
         uses: "tukasz/direct-merge-action@master"
         with:
           GITHUB_TOKEN: "${{ secrets.TOKEN }}"
-          source-branch: develop
-          target-branch: main
+          source-branch: ${{ github.ref }}
+          target-branch: develop
