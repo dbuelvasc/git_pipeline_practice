@@ -46,11 +46,11 @@ jobs:
   job-automerge:
     name: Automerge
     needs: job-Unittest
-    #if: ${{ github.ref }} == 'refs/heads/develop' && ${{ contains(github.event.head_commit.message, 'Verde') }}
     runs-on: ubuntu-latest
     steps:
       - name: Merge develop into main
-        uses: "tukasz/direct-merge-action@develop"
+        if: ${{ github.ref }} == 'refs/heads/develop' && ${{ contains(github.event.head_commit.message, 'Azul') }}
+        uses: "tukasz/direct-merge-action@master"
         with:
           GITHUB_TOKEN: "${{ secrets.TOKEN }}"
           source-branch: develop
