@@ -56,9 +56,12 @@ jobs:
   job-automerge:
     name: Automerge
     needs: job-Unittest
-    if: ${{ github.ref }} == 'develop' && ${{ contains(github.event.head_commit.message, 'Verde') }} == True
+    #if: ${{ github.ref }} == 'develop' && ${{ contains(github.event.head_commit.message, 'Verde') }}
     runs-on: ubuntu-latest
     steps:
+      - name: EL NOMBRE DE LA RAMA
+        run: |
+          echo ${{ github.ref }}
       - name: Merge develop into main
         uses: "tukasz/direct-merge-action@develop"
         with:
