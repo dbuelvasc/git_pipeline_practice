@@ -2,7 +2,7 @@ name: Pruebas AutoMerge Feature
 on:
   push:
     branches:
-      - 'feature/**'
+      - 'feature/*'
 env:
   PYTHON_VERSION: '3.8'
 
@@ -51,5 +51,5 @@ jobs:
         uses: "tukasz/direct-merge-action@master"
         with:
           GITHUB_TOKEN: "${{ secrets.TOKEN }}"
-          source-branch: "feature/**"
+          source-branch: "feature/*"
           target-branch: develop
